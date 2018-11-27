@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.statistics.ss.checkingin.dao.SsCheckingInDao">
+    
+	<sql id="ssCheckingInColumns">
+		a.id AS "id",
+		a.dateline AS "dateline",
+		a.weekend AS "weekend",
+		a.holiday AS "holiday",
+		a.am AS "am",
+		a.pm AS "pm",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="ssCheckingInJoins">
+	</sql>
+    
+	<select id="get" resultType="SsCheckingIn">
+		SELECT
+			<include refid="ssCheckingInColumns"/>
+		FROM ss_checking_in a
+		<include refid="ssCheckingInJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getDL" resultType="SsCheckingIn">
+		SELECT
+		<include refid="ssCheckingInColumns"/>
+		FROM ss_checking_in a
+		<include refid="ssCheckingInJoins"/>
+		WHERE a.dateline = #{dateline}
+	</select>
+	
+	<select id="findList" resultType="SsCheckingIn">
+		SELECT 
+			<include refid="ssCheckingInColumns"/>
+		FROM ss_checking_in a
+		<include refid="ssCheckingInJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="dateline != null and dateline != ''">
+				AND a.dateline = #{dateline}
+			</if>
+			<if test="am != null and am != ''">
+				AND a.am &gt;= #{am}
+			</if>
+			<if test="pm != null and pm != ''">
+				AND a.pm &gt;= #{pm}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SsCheckingIn">
+		SELECT 
+			<include refid="ssCheckingInColumns"/>
+		FROM ss_checking_in a
+		<include refid="ssCheckingInJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ss_checking_in(
+			id,
+			dateline,
+			weekend,
+			holiday,
+			am,
+			pm,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{dateline},
+			#{weekend},
+			#{holiday},
+			#{am},
+			#{pm},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ss_checking_in SET
+		dateline = #{dateline},
+		<if test="weekend != null and weekend != ''">
+			weekend = #{weekend},
+		</if>
+		<if test="holiday != null and holiday != ''">
+			holiday = #{holiday},
+		</if>
+		<if test="am != null and am != ''">
+			am = #{am},
+		</if>
+		<if test="pm != null and pm != ''">
+			pm = #{pm},
+		</if>
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+		remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ss_checking_in SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

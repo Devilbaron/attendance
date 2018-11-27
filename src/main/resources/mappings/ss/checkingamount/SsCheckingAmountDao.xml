@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.statistics.ss.checkingamount.dao.SsCheckingAmountDao">
+    
+	<sql id="ssCheckingAmountColumns">
+		a.id AS "id",
+		a.departmentname AS "departmentname",
+		a.departmentcode AS "departmentcode",
+		a.personname AS "personname",
+		a.personcode AS "personcode",
+		a.intimeamount AS "intimeamount",
+		a.outtimeamount AS "outtimeamount",
+		a.checkamount AS "checkamount",
+		a.amount AS "amount",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="ssCheckingAmountJoins">
+	</sql>
+    
+	<select id="get" resultType="SsCheckingAmount">
+		SELECT 
+			<include refid="ssCheckingAmountColumns"/>
+		FROM ss_checking_amount a
+		<include refid="ssCheckingAmountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SsCheckingAmount">
+		SELECT 
+			<include refid="ssCheckingAmountColumns"/>
+		FROM ss_checking_amount a
+		<include refid="ssCheckingAmountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="personname != null and personname != ''">
+				AND a.personname = #{personname}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SsCheckingAmount">
+		SELECT 
+			<include refid="ssCheckingAmountColumns"/>
+		FROM ss_checking_amount a
+		<include refid="ssCheckingAmountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ss_checking_amount(
+			id,
+			departmentname,
+			departmentcode,
+			personname,
+			personcode,
+			intimeamount,
+			outtimeamount,
+			checkamount,
+			amount,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{departmentname},
+			#{departmentcode},
+			#{personname},
+			#{personcode},
+			#{intimeamount},
+			#{outtimeamount},
+			#{checkamount},
+			#{amount},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ss_checking_amount SET 	
+			departmentname = #{departmentname},
+			departmentcode = #{departmentcode},
+			personname = #{personname},
+			personcode = #{personcode},
+			intimeamount = #{intimeamount},
+			outtimeamount = #{outtimeamount},
+			checkamount = #{checkamount},
+			amount = #{amount},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ss_checking_amount SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

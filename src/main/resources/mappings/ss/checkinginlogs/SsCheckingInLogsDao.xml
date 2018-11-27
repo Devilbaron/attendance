@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.statistics.ss.checkinginlogs.dao.SsCheckingInLogsDao">
+    
+	<sql id="ssCheckingInLogsColumns">
+		a.recordid AS "recordid",
+		a.recorddate AS "recorddate",
+		a.personname AS "personname",
+		a.departmentcode AS "departmentcode",
+		a.intime AS "intime",
+		a.personcode AS "personcode",
+		a.departmentname AS "departmentname",
+		a.outtime AS "outtime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="ssCheckingInLogsJoins">
+	</sql>
+    
+	<select id="get" resultType="SsCheckingInLogs">
+		SELECT 
+			<include refid="ssCheckingInLogsColumns"/>
+		FROM ss_checking_in_logs a
+		<include refid="ssCheckingInLogsJoins"/>
+		WHERE a.recordid = #{recordid}
+	</select>
+	
+	<select id="findList" resultType="SsCheckingInLogs">
+		SELECT 
+			<include refid="ssCheckingInLogsColumns"/>
+		FROM ss_checking_in_logs a
+		<include refid="ssCheckingInLogsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="beginRecorddate != null and endRecorddate != null and beginRecorddate != '' and endRecorddate != ''">
+				AND a.recorddate BETWEEN #{beginRecorddate} AND #{endRecorddate}
+			</if>
+			<if test="personname != null and personname != ''">
+				AND a.personname = #{personname}
+			</if>
+			<if test="intime != null and intime != ''">
+				AND a.intime &gt;= #{intime}
+			</if>
+			<if test="departmentname != null and departmentname != ''">
+				AND a.departmentname = #{departmentname}
+			</if>
+			<if test="outtime != null and outtime != ''">
+				AND a.outtime &gt;= #{outtime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SsCheckingInLogs">
+		SELECT 
+			<include refid="ssCheckingInLogsColumns"/>
+		FROM ss_checking_in_logs a
+		<include refid="ssCheckingInLogsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO ss_checking_in_logs(
+			recordid,
+			recorddate,
+			personname,
+			departmentcode,
+			intime,
+			personcode,
+			departmentname,
+			outtime,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{recordid},
+			#{recorddate},
+			#{personname},
+			#{departmentcode},
+			#{intime},
+			#{personcode},
+			#{departmentname},
+			#{outtime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ss_checking_in_logs SET 	
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE ss_checking_in_logs SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
