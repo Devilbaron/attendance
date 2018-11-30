@@ -59,38 +59,18 @@
 				<form:input path="personname" readonly="readonly" disabled="true" htmlEscape="false" maxlength="32" class="input-xlarge "/>
 			</div>
 		</div>
-		<%--<div class="control-group">--%>
-			<%--<label class="control-label">签到时间：</label>--%>
-			<%--<div class="controls">--%>
-				<%--<form:input path="intime" htmlEscape="false" maxlength="16" class="input-xlarge "/>--%>
-			<%--</div>--%>
-		<%--</div>--%>
-		<fmt:parseDate value="${ssCheckingInLogs.intime}" pattern="HH:mm:ss" var="intime"/>
-		<fmt:parseDate value="${ssCheckingInLogs.outtime}" pattern="HH:mm:ss" var="outtime"/>
 		<div class="control-group">
 			<label class="control-label">签到时间：</label>
 			<div class="controls">
-				<input name="intime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
-					   value="<fmt:formatDate value="${intime}" pattern="HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'HH:mm:ss',isShowClear:false});
-				"/>
+				<form:input path="intime" htmlEscape="false" maxlength="16" class="input-xlarge "/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">签退时间：</label>
 			<div class="controls">
-				<input name="outtime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
-					   value="<fmt:formatDate value="${outtime}" pattern="HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'HH:mm:ss',isShowClear:false});
-				"/>
+				<form:input path="outtime" htmlEscape="false" maxlength="16" class="input-xlarge "/>
 			</div>
 		</div>
-		<%--<div class="control-group">--%>
-			<%--<label class="control-label">签退时间：</label>--%>
-			<%--<div class="controls">--%>
-				<%--<form:input path="outtime" htmlEscape="false" maxlength="16" class="input-xlarge "/>--%>
-			<%--</div>--%>
-		<%--</div>--%>
 		<div class="control-group">
 			<label class="control-label">备注：</label>
 			<div class="controls">

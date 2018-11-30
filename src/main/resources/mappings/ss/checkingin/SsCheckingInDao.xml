@@ -132,10 +132,14 @@
 		WHERE id = #{id}
 	</update>
 	
-	<update id="delete">
-		UPDATE ss_checking_in SET 
-			del_flag = #{DEL_FLAG_DELETE}
+	<!--<update id="delete">-->
+		<!--UPDATE ss_checking_in SET -->
+			<!--del_flag = #{DEL_FLAG_DELETE}-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
+	<delete id="delete">
+		DELETE FROM ss_checking_in
 		WHERE id = #{id}
-	</update>
+	</delete>
 	
 </mapper>

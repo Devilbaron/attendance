@@ -5,7 +5,6 @@ package com.statistics.ss.checkinginlogs.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,19 +14,15 @@ import com.statistics.ss.checkinginlogs.entity.SsCheckingInLogs;
 import com.statistics.ss.checkinginlogs.dao.SsCheckingInLogsDao;
 
 /**
- * 考勤统计Service
+ * 考勤记录Service
  * @author DB
- * @version 2018-11-23
+ * @version 2018-11-28
  */
 @Service
 @Transactional(readOnly = true)
 public class SsCheckingInLogsService extends CrudService<SsCheckingInLogsDao, SsCheckingInLogs> {
 
 	public SsCheckingInLogs get(String id) {
-		return super.get(id);
-	}
-
-	public SsCheckingInLogs getList(String id) {
 		return super.get(id);
 	}
 	

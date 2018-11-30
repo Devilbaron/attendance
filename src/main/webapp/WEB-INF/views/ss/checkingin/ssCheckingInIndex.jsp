@@ -8,6 +8,16 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#btnDel").click(function () {
+                top.$.jBox.confirm("确认删除数据吗？", "系统提示", function (v, h, f) {
+                    if (v == "ok") {
+                        $("#searchForm").attr("action", "${ctx}/a/checkingin/ssCheckingIn/yDel");
+                        $("#searchForm").submit();
+                    }
+                }, {buttonsFocus: 1});
+                top.$('.jbox-body .jbox-icon').css('top', '55px');
+            });
+
             //$("#name").focus();
             $("#inputForm").validate({
                 submitHandler: function (form) {
@@ -47,7 +57,7 @@
                value="<fmt:formatDate value="<%=new Date() %>" pattern="yyyy"/>"
                onclick="WdatePicker({dateFmt:'yyyy',isShowClear:false});"/>
     </li>
-    <li class="btns"><input id="cLogTablesBtnSubmit" class="btn btn-primary" type="submit" value="删除考勤规则"/></li>
+    <li class="btns"><input id="btnDel" class="btn btn-primary" type="button"value="删除考勤规则"/></li>
     <li class="clearfix"></li>
 </form:form>
 <sys:message content="${message}"/>

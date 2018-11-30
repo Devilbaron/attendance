@@ -5,11 +5,11 @@
 	<sql id="ssCheckingInLogsColumns">
 		a.recordid AS "recordid",
 		a.recorddate AS "recorddate",
-		a.personname AS "personname",
 		a.departmentcode AS "departmentcode",
-		a.intime AS "intime",
-		a.personcode AS "personcode",
 		a.departmentname AS "departmentname",
+		a.personcode AS "personcode",
+		a.personname AS "personname",
+		a.intime AS "intime",
 		a.outtime AS "outtime",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
@@ -40,17 +40,17 @@
 			<if test="beginRecorddate != null and endRecorddate != null and beginRecorddate != '' and endRecorddate != ''">
 				AND a.recorddate BETWEEN #{beginRecorddate} AND #{endRecorddate}
 			</if>
-			<if test="personname != null and personname != ''">
-				AND a.personname = #{personname}
-			</if>
-			<if test="intime != null and intime != ''">
-				AND a.intime &gt;= #{intime}
-			</if>
 			<if test="departmentname != null and departmentname != ''">
-				AND a.departmentname = #{departmentname}
+				AND a.departmentname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{departmentname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{departmentname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{departmentname},'%')</if>
 			</if>
-			<if test="outtime != null and outtime != ''">
-				AND a.outtime &gt;= #{outtime}
+			<if test="personname != null and personname != ''">
+				AND a.personname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{personname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{personname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{personname},'%')</if>
 			</if>
 		</where>
 		<choose>
@@ -85,11 +85,11 @@
 		INSERT INTO ss_checking_in_logs(
 			recordid,
 			recorddate,
-			personname,
 			departmentcode,
-			intime,
-			personcode,
 			departmentname,
+			personcode,
+			personname,
+			intime,
 			outtime,
 			create_by,
 			create_date,
@@ -100,11 +100,11 @@
 		) VALUES (
 			#{recordid},
 			#{recorddate},
-			#{personname},
 			#{departmentcode},
-			#{intime},
-			#{personcode},
 			#{departmentname},
+			#{personcode},
+			#{personname},
+			#{intime},
 			#{outtime},
 			#{createBy.id},
 			#{createDate},
@@ -117,14 +117,21 @@
 	
 	<update id="update">
 		UPDATE ss_checking_in_logs SET 	
+			recordid = #{recordid},
+			recorddate = #{recorddate},
+			departmentname = #{departmentname},
+			personname = #{personname},
+			intime = #{intime},
+			outtime = #{outtime},
+			update_date = #{updateDate},
 			remarks = #{remarks}
-		WHERE id = #{id}
+		WHERE recordid = #{recordid}
 	</update>
 	
 	<update id="delete">
 		UPDATE ss_checking_in_logs SET 
 			del_flag = #{DEL_FLAG_DELETE}
-		WHERE id = #{id}
+		WHERE recordid = #{recordid}
 	</update>
 	
 </mapper>

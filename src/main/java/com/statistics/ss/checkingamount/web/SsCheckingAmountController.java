@@ -177,8 +177,8 @@ public class SsCheckingAmountController extends BaseController {
                 page.getList().get(i).setAmount(String.valueOf(cz));
             }
         }
-        SsCheckingAmount ss = new SsCheckingAmount();
-        model.addAttribute("ssCheckingAmount", ss);
+        model.addAttribute("ssCheckingAmount", ssCheckingAmount);
+
         model.addAttribute("page", page);
         return "ss/checkingamount/ssCheckingAmountList";
     }

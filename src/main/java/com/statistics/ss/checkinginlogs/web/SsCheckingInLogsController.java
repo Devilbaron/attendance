@@ -23,9 +23,9 @@ import com.statistics.ss.checkinginlogs.entity.SsCheckingInLogs;
 import com.statistics.ss.checkinginlogs.service.SsCheckingInLogsService;
 
 /**
- * 考勤统计Controller
+ * 考勤记录Controller
  * @author DB
- * @version 2018-11-23
+ * @version 2018-11-28
  */
 @Controller
 @RequestMapping(value = "${adminPath}/checkinginlogs/ssCheckingInLogs")
@@ -35,10 +35,10 @@ public class SsCheckingInLogsController extends BaseController {
 	private SsCheckingInLogsService ssCheckingInLogsService;
 	
 	@ModelAttribute
-	public SsCheckingInLogs get(@RequestParam(required=false) String id) {
+	public SsCheckingInLogs get(@RequestParam(required=false) String recordid) {
 		SsCheckingInLogs entity = null;
-		if (StringUtils.isNotBlank(id)){
-			entity = ssCheckingInLogsService.get(id);
+		if (StringUtils.isNotBlank(recordid)){
+			entity = ssCheckingInLogsService.get(recordid);
 		}
 		if (entity == null){
 			entity = new SsCheckingInLogs();
@@ -51,6 +51,7 @@ public class SsCheckingInLogsController extends BaseController {
 	public String list(SsCheckingInLogs ssCheckingInLogs, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SsCheckingInLogs> page = ssCheckingInLogsService.findPage(new Page<SsCheckingInLogs>(request, response), ssCheckingInLogs);
 
+		model.addAttribute("ssCheckingInLogs",ssCheckingInLogs);
 		model.addAttribute("page", page);
 		return "ss/checkinginlogs/ssCheckingInLogsList";
 	}
@@ -68,8 +69,9 @@ public class SsCheckingInLogsController extends BaseController {
 		if (!beanValidator(model, ssCheckingInLogs)){
 			return form(ssCheckingInLogs, model);
 		}
+//		ssCheckingInLogsService.delete(ssCheckingInLogs);
 		ssCheckingInLogsService.save(ssCheckingInLogs);
-		addMessage(redirectAttributes, "保存考勤统计成功");
+		addMessage(redirectAttributes, "保存考勤记录成功");
 		return "redirect:"+Global.getAdminPath()+"/checkinginlogs/ssCheckingInLogs/?repage";
 	}
 	
@@ -77,7 +79,7 @@ public class SsCheckingInLogsController extends BaseController {
 	@RequestMapping(value = "delete")
 	public String delete(SsCheckingInLogs ssCheckingInLogs, RedirectAttributes redirectAttributes) {
 		ssCheckingInLogsService.delete(ssCheckingInLogs);
-		addMessage(redirectAttributes, "删除考勤统计成功");
+		addMessage(redirectAttributes, "删除考勤记录成功");
 		return "redirect:"+Global.getAdminPath()+"/checkinginlogs/ssCheckingInLogs/?repage";
 	}
 

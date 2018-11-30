@@ -8,12 +8,11 @@ import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.statistics.ss.checkinginlogs.entity.SsCheckingInLogs;
 
 /**
- * 考勤统计DAO接口
+ * 考勤记录DAO接口
  * @author DB
- * @version 2018-11-23
+ * @version 2018-11-28
  */
 @MyBatisDao
 public interface SsCheckingInLogsDao extends CrudDao<SsCheckingInLogs> {
-
 	
 }

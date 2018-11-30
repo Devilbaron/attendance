@@ -29,16 +29,16 @@
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/checkingin/ssCheckingIn/">考勤规则列表</a></li>
     <shiro:hasPermission name="checkingin:ssCheckingIn:edit">
-        <li><a href="${ctx}/checkingin/ssCheckingIn/calendar">考勤规则添加</a></li>
+        <li><a href="${ctx}/a/checkingin/ssCheckingIn/calendar">考勤规则删除</a></li>
     </shiro:hasPermission>
 </ul>
 <form:form id="searchForm" modelAttribute="ssCheckingIn" action="${ctx}/a/checkingin/ssCheckingIn/cLogTables" method="post"
            class="breadcrumb form-search">
     <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
     <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-    <li><label>上午时间：</label>
+    <li><label>年份：</label>
         <input name="yyyy" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-               value="<fmt:formatDate value="<%=new Date() %>" pattern="yyyy"/>"
+               value="<fmt:formatDate  value="<%=new Date() %>" pattern="yyyy"/>"
                onclick="WdatePicker({dateFmt:'yyyy',isShowClear:false});"/>
     </li>
     <li><label>上午时间：</label>
@@ -53,6 +53,7 @@
     </li>
     <%--<input type="hidden" name="yyyy" value="<fmt:formatDate value="<%=new Date() %>" pattern="yyyy"/>">--%>
     <li class="btns"><input id="cLogTablesBtnSubmit" class="btn btn-primary" type="submit" value="生成考勤规则"/></li>
+
     <li class="clearfix"></li>
 </form:form>
 <sys:message content="${message}"/>
