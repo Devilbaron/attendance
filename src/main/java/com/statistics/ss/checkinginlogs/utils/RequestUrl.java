@@ -3,6 +3,7 @@ package com.statistics.ss.checkinginlogs.utils;
 import com.statistics.ss.checkingin.entity.Attendances;
 import com.statistics.ss.checkingin.entity.RequestData;
 import com.statistics.ss.checkinginlogs.entity.Kqjls;
+import com.thinkgem.jeesite.common.config.Global;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -71,7 +72,7 @@ public class RequestUrl {
 //        return document.toString();//返回值
 
         // 登陆 Url
-        String loginUrl = "http://192.168.1.90:8088/fastgate/user/login";
+        String loginUrl = Global.getConfig("updataloginurl");
         String cookie = null;
         // 全局客户端
         CloseableHttpClient httpClient = null;

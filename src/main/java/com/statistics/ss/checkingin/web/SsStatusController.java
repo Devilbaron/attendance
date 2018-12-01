@@ -94,11 +94,14 @@ public class SsStatusController extends BaseController {
 //            return form(ssCheckingIn, model);
         }
         RequestUrl requestUrl = new RequestUrl();
-
-            String url = "http://192.168.1.90:8088/fastgate/attendances?conditionParam={\"date\":\"2010/01/01-2020/12/32\",\"page\":\"1\",\"size\":\"4\"}";
-//        List<Kqjls> kqjlsList = requestUrl.Result(url);
+        String url ="";
+        if (Global.getConfig("updataurl") == null){
+            url = "http://130.1.198.12:8088/fastgate/attendances?conditionParam={\"date\":\"2010/01/01-2020/12/31\",\"page\":\"1\",\"size\":\"4\"}";
+        }else{
+            url = Global.getConfig("updataurl");
+        };
+            //        List<Kqjls> kqjlsList = requestUrl.Result(url);
             Date d = new Date();
-            System.out.println(d);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String dateNowStr = sdf.format(d);
 
@@ -153,9 +156,11 @@ public class SsStatusController extends BaseController {
 
         if (!yyyy.equals("") & !yyyy.equals(null)){
             SsCheckingIn ssCheckingIn1 = ssCheckingInService.get(yyyy+"-01-01");
-                if (ssCheckingIn1 != null & Integer.valueOf(ssCheckingIn1.getDelFlag()) != 1){
-                    addMessage(redirectAttributes, "已存在不能添加");
-                    return "redirect:"+Global.getAdminPath()+"/checkingin/ssCheckingIn/?repage";
+                if(ssCheckingInService.get(yyyy+"-01-01") != null){
+                    if (ssCheckingIn1 != null & Integer.valueOf(ssCheckingIn1.getDelFlag()) != 1){
+                        addMessage(redirectAttributes, "已存在不能添加");
+                        return "redirect:"+Global.getAdminPath()+"/checkingin/ssCheckingIn/?repage";
+                    }
                 }
             }
 

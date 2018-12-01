@@ -62,7 +62,7 @@ public class XmlUtil
                 {
                     field.set(obj, Integer.parseInt(rootElt.elementTextTrim(name)));
                 }
-                else if (field.getType().equals(java.util.Date.class))
+                else if (field.getType().equals(Date.class))
                 {
                     field.set(obj, Date.parse(rootElt.elementTextTrim(name)));
                 }

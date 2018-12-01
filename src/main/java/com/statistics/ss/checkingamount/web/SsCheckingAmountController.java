@@ -77,14 +77,7 @@ public class SsCheckingAmountController extends BaseController {
         //获取一段时间的考勤规则
         List<SsCheckingIn> inList = new ArrayList<SsCheckingIn>();
 
-        //迟到天数
-        int cd = 0;
-        //早退天数
-        int zt = 0;
-        //迟到早退天数
-        int cz = 0;
-        //缺勤天数
-        int qq = 0;
+
 
 
         for (SsCheckingIn in : ssCheckingInService.findList(new SsCheckingIn())
@@ -107,6 +100,14 @@ public class SsCheckingAmountController extends BaseController {
         if (inList.size() > 0) {
             //人员考勤统计
             for (int i = 0; i < page.getList().size(); i++) {
+                //迟到天数
+                int cd = 0;
+                //早退天数
+                int zt = 0;
+                //迟到早退天数
+                int cz = 0;
+                //缺勤天数
+                int qq = 0;
                 //人员id
                 SsCheckingInLogs scils = new SsCheckingInLogs();
                 List<SsCheckingInLogs> scilsList = new ArrayList<SsCheckingInLogs>();
@@ -130,43 +131,54 @@ public class SsCheckingAmountController extends BaseController {
                     if (si.getHoliday() > 0 | si.getWeekend() > 0) {
                         //节假日不统计
                     } else {
+                        int tmp = 0;
                         //考勤记录
                         for (SsCheckingInLogs s : scilsList) {
                             if (si.getId().equals(s.getRecorddate())) {
                                 if (s.getIntime() == null && s.getOuttime() == null) {
                                     //缺勤
                                     qq += 1;
+                                    break;
                                 } else if (s.getIntime() == null) {
                                     if (s.getOuttime() != null) {
                                         //迟到
                                         cd += 1;
+                                        break;
                                     }
                                 } else if (s.getOuttime() == null) {
                                     //迟到
                                     if (s.getIntime() != null){
                                         cz += 1;
+                                        break;
                                     }
-                                } else if (compare_time(si.getAm(), s.getIntime()) < 1) {
-                                    if (compare_time(si.getPm(), s.getOuttime()) > 1) {
+                                } else if (compare_time(si.getAm(), s.getIntime()) < 0) {
+                                    if (compare_time(si.getPm(), s.getOuttime()) > 0) {
                                         //早退
                                         cz += 1;
+                                        break;
                                     }else{
                                     //迟到
                                     cd += 1;
+                                        break;
                                     }
-                                } else if (compare_time(si.getPm(), s.getOuttime()) > 1) {
-                                    if (compare_time(si.getAm(), s.getIntime()) < 1) {
+                                } else if (compare_time(si.getPm(), s.getOuttime()) > 0) {
+                                    if (compare_time(si.getAm(), s.getIntime()) < 0) {
                                         cz += 1;
+                                        break;
                                     }else {
                                         //早退
                                         zt += 1;
+                                        break;
                                     }
                                 } else {
                                     //正常
                                 }
                             }else {
-                                qq += 1;
+                                tmp += 1;
                             }
+                        }
+                        if (tmp >= scilsList.size()){
+                            qq += 1;
                         }
                     }
                 }

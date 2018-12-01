@@ -1,4 +1,4 @@
-///**
+package com.statistics.ss.checkingin.web;///**
 // * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
 // */
 //package com.statistics.ss.checkingin.web;
