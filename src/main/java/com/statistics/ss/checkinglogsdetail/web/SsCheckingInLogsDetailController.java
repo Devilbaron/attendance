@@ -65,57 +65,63 @@ public class SsCheckingInLogsDetailController extends BaseController {
 
             if (ssCheckingInService.findList(new SsCheckingIn()).size() > 0) {
                 SsCheckingIn ssCheckingIn = ssCheckingInService.get(page.getList().get(i).getRecorddate());
-
-                //节假日
-                if (ssCheckingIn.getHoliday() > 0 && ssCheckingIn.getWeekend() > 0) {
-                    page.getList().get(i).setAttendanceconc("休息");
-                } else {
-                    //考勤时间非空
-                    if (page.getList().get(i).getIntime() != null && !page.getList().get(i).getIntime().equals("")) {
-                        //判断迟到
-                        if (compare_time(ssCheckingIn.getAm(), page.getList().get(i).getIntime()) >= 0) {
-                            page.getList().get(i).setIntimermk("正常");
+                if (ssCheckingIn != null){
+                    //节假日
+                    if (ssCheckingIn.getHoliday() > 0 && ssCheckingIn.getWeekend() > 0) {
+                        page.getList().get(i).setAttendanceconc("休息");
+                    } else {
+                        //考勤时间非空
+                        if (page.getList().get(i).getIntime() != null && !page.getList().get(i).getIntime().equals("")) {
+                            //判断迟到
+                            if (compare_time(ssCheckingIn.getAm(), page.getList().get(i).getIntime()) >= 0) {
+                                page.getList().get(i).setIntimermk("正常");
+                            } else {
+                                page.getList().get(i).setIntimermk("迟到");
+                            }
                         } else {
-                            page.getList().get(i).setIntimermk("迟到");
+                            page.getList().get(i).setIntimermk("未打卡");
                         }
-                    } else {
-                        page.getList().get(i).setIntimermk("未打卡");
-                    }
-                    if (page.getList().get(i).getOuttime() != null && !page.getList().get(i).getOuttime().equals("")) {
-                        if (compare_time(ssCheckingIn.getPm(), page.getList().get(i).getOuttime()) <= 0) {
-                            page.getList().get(i).setOuttimermk("正常");
+                        if (page.getList().get(i).getOuttime() != null && !page.getList().get(i).getOuttime().equals("")) {
+                            if (compare_time(ssCheckingIn.getPm(), page.getList().get(i).getOuttime()) <= 0) {
+                                page.getList().get(i).setOuttimermk("正常");
+                            } else {
+                                page.getList().get(i).setOuttimermk("早退");
+                            }
                         } else {
-                            page.getList().get(i).setOuttimermk("早退");
+                            page.getList().get(i).setOuttimermk("未打卡");
                         }
-                    } else {
-                        page.getList().get(i).setOuttimermk("未打卡");
-                    }
-                    if (page.getList().get(i).getIntimermk().equals("未打卡") || page.getList().get(i).getOuttimermk().equals("未打卡")) {
-                        if (page.getList().get(i).getIntimermk().equals("未打卡") && page.getList().get(i).getOuttimermk().equals("未打卡")){
-                            page.getList().get(i).setAttendanceconc("旷工");
-                        }else if (page.getList().get(i).getIntimermk().equals("未打卡")){
-                            page.getList().get(i).setAttendanceconc("迟到");
-                        }else if (page.getList().get(i).getOuttimermk().equals("未打卡")){
-                            page.getList().get(i).setAttendanceconc("早退");
-                        }
-                    } else if (page.getList().get(i).getIntimermk().equals("正常") && page.getList().get(i).getOuttimermk().equals("正常")) {
-                        page.getList().get(i).setAttendanceconc("正常");
-                    } else if (page.getList().get(i).getIntimermk().equals("迟到") || page.getList().get(i).getOuttimermk().equals("早退")) {
-                        if (page.getList().get(i).getIntimermk().equals("迟到") && page.getList().get(i).getOuttimermk().equals("早退")){
-                            page.getList().get(i).setAttendanceconc("迟到早退");
-                        }else if (page.getList().get(i).getIntimermk().equals("迟到")){
-                            page.getList().get(i).setAttendanceconc("迟到");
-                        }else if (page.getList().get(i).getOuttimermk().equals("早退")){
-                            page.getList().get(i).setAttendanceconc("早退");
-                        }
+                        if (page.getList().get(i).getIntimermk().equals("未打卡") || page.getList().get(i).getOuttimermk().equals("未打卡")) {
+                            if (page.getList().get(i).getIntimermk().equals("未打卡") && page.getList().get(i).getOuttimermk().equals("未打卡")){
+                                page.getList().get(i).setAttendanceconc("旷工");
+                            }else if (page.getList().get(i).getIntimermk().equals("未打卡")){
+                                page.getList().get(i).setAttendanceconc("迟到");
+                            }else if (page.getList().get(i).getOuttimermk().equals("未打卡")){
+                                if (page.getList().get(i).getIntimermk().equals("迟到") && page.getList().get(i).getOuttimermk().equals("未打卡")){
+                                    page.getList().get(i).setAttendanceconc("迟到早退");
+                                }else {
+                                    page.getList().get(i).setAttendanceconc("早退");
+                                }
+                            }
+                        } else if (page.getList().get(i).getIntimermk().equals("正常") && page.getList().get(i).getOuttimermk().equals("正常")) {
+                            page.getList().get(i).setAttendanceconc("正常");
+                        } else if (page.getList().get(i).getIntimermk().equals("迟到") || page.getList().get(i).getOuttimermk().equals("早退")) {
+                            if (page.getList().get(i).getIntimermk().equals("迟到") && page.getList().get(i).getOuttimermk().equals("早退")){
+                                page.getList().get(i).setAttendanceconc("迟到早退");
+                            }else if (page.getList().get(i).getIntimermk().equals("迟到")){
+                                page.getList().get(i).setAttendanceconc("迟到");
+                            }else if (page.getList().get(i).getOuttimermk().equals("早退")){
+                                page.getList().get(i).setAttendanceconc("早退");
+                            }
 
-                    } else {
-                        page.getList().get(i).setAttendanceconc("特殊");
+                        } else {
+                            page.getList().get(i).setAttendanceconc("特殊");
+                        }
                     }
                 }
-            }
 
+            }
         }
+
         model.addAttribute("ssCheckingInLogs",ssCheckingInLogs);
         model.addAttribute("page", page);
         return "ss/checkinglogsdetail/ssCheckingInLogsList";
@@ -134,43 +140,64 @@ public class SsCheckingInLogsDetailController extends BaseController {
         try {
             Page<SsCheckingInLogs> page = ssCheckingInLogsService.findPage(new Page<SsCheckingInLogs>(request, response), ssCheckingInLogs);
 
-            for (int i = 0; i < page.getList().size(); i++){
+            for (int i = 0; i < page.getList().size(); i++) {
 
-                SsCheckingIn ssCheckingIn = ssCheckingInService.get(page.getList().get(i).getRecorddate());
+                if (ssCheckingInService.findList(new SsCheckingIn()).size() > 0) {
+                    SsCheckingIn ssCheckingIn = ssCheckingInService.get(page.getList().get(i).getRecorddate());
+                    if (ssCheckingIn != null){
+                        //节假日
+                        if (ssCheckingIn.getHoliday() > 0 && ssCheckingIn.getWeekend() > 0) {
+                            page.getList().get(i).setAttendanceconc("休息");
+                        } else {
+                            //考勤时间非空
+                            if (page.getList().get(i).getIntime() != null && !page.getList().get(i).getIntime().equals("")) {
+                                //判断迟到
+                                if (compare_time(ssCheckingIn.getAm(), page.getList().get(i).getIntime()) >= 0) {
+                                    page.getList().get(i).setIntimermk("正常");
+                                } else {
+                                    page.getList().get(i).setIntimermk("迟到");
+                                }
+                            } else {
+                                page.getList().get(i).setIntimermk("未打卡");
+                            }
+                            if (page.getList().get(i).getOuttime() != null && !page.getList().get(i).getOuttime().equals("")) {
+                                if (compare_time(ssCheckingIn.getPm(), page.getList().get(i).getOuttime()) <= 0) {
+                                    page.getList().get(i).setOuttimermk("正常");
+                                } else {
+                                    page.getList().get(i).setOuttimermk("早退");
+                                }
+                            } else {
+                                page.getList().get(i).setOuttimermk("未打卡");
+                            }
+                            if (page.getList().get(i).getIntimermk().equals("未打卡") || page.getList().get(i).getOuttimermk().equals("未打卡")) {
+                                if (page.getList().get(i).getIntimermk().equals("未打卡") && page.getList().get(i).getOuttimermk().equals("未打卡")){
+                                    page.getList().get(i).setAttendanceconc("旷工");
+                                }else if (page.getList().get(i).getIntimermk().equals("未打卡")){
+                                    page.getList().get(i).setAttendanceconc("迟到");
+                                }else if (page.getList().get(i).getOuttimermk().equals("未打卡")){
+                                    if (page.getList().get(i).getIntimermk().equals("迟到") && page.getList().get(i).getOuttimermk().equals("未打卡")){
+                                        page.getList().get(i).setAttendanceconc("迟到早退");
+                                    }else {
+                                        page.getList().get(i).setAttendanceconc("早退");
+                                    }
+                                }
+                            } else if (page.getList().get(i).getIntimermk().equals("正常") && page.getList().get(i).getOuttimermk().equals("正常")) {
+                                page.getList().get(i).setAttendanceconc("正常");
+                            } else if (page.getList().get(i).getIntimermk().equals("迟到") || page.getList().get(i).getOuttimermk().equals("早退")) {
+                                if (page.getList().get(i).getIntimermk().equals("迟到") && page.getList().get(i).getOuttimermk().equals("早退")){
+                                    page.getList().get(i).setAttendanceconc("迟到早退");
+                                }else if (page.getList().get(i).getIntimermk().equals("迟到")){
+                                    page.getList().get(i).setAttendanceconc("迟到");
+                                }else if (page.getList().get(i).getOuttimermk().equals("早退")){
+                                    page.getList().get(i).setAttendanceconc("早退");
+                                }
 
-                //节假日
-                if (ssCheckingIn.getHoliday() > 0 && ssCheckingIn.getWeekend() > 0){
-                    page.getList().get(i).setAttendanceconc("休息");
-                }else{
-                    //考勤时间非空
-                    if (page.getList().get(i).getIntime() != null && !page.getList().get(i).getIntime().equals("")){
-                        //判断迟到
-                        if (compare_time(ssCheckingIn.getAm(),page.getList().get(i).getIntime()) >= 0){
-                            page.getList().get(i).setIntimermk("正常");
-                        }else {
-                            page.getList().get(i).setIntimermk("迟到");
+                            } else {
+                                page.getList().get(i).setAttendanceconc("特殊");
+                            }
                         }
-                    }else {
-                        page.getList().get(i).setIntimermk("未打卡");
                     }
-                    if (page.getList().get(i).getOuttime() != null && !page.getList().get(i).getOuttime().equals("")){
-                        if (compare_time(ssCheckingIn.getPm(),page.getList().get(i).getOuttime()) <= 0){
-                            page.getList().get(i).setOuttimermk("正常");
-                        }else {
-                            page.getList().get(i).setOuttimermk("早退");
-                        }
-                    }else {
-                        page.getList().get(i).setIntimermk("未打卡");
-                    }
-                    if (page.getList().get(i).getIntimermk().equals("未打卡") || page.getList().get(i).getOuttimermk().equals("未打卡")){
-                        page.getList().get(i).setAttendanceconc("旷工");
-                    }else if(page.getList().get(i).getIntimermk().equals("正常") && page.getList().get(i).getOuttimermk().equals("正常")){
-                        page.getList().get(i).setAttendanceconc("正常");
-                    }else if(page.getList().get(i).getIntimermk().equals("迟到") || page.getList().get(i).getOuttimermk().equals("早退")){
-                        page.getList().get(i).setAttendanceconc("异常");
-                    }else {
-                        page.getList().get(i).setAttendanceconc("特殊");
-                    }
+
                 }
             }
             String fileName = "统计数据" + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";

@@ -9,7 +9,7 @@
             $("#btnUp").click(function () {
                 top.$.jBox.confirm("确认更新数据吗？", "系统提示", function (v, h, f) {
                     if (v == "ok") {
-                        $("#searchForm").attr("action", "${ctx}/a/checkingin/ssCheckingIn/yDel");
+                        $("#searchForm").attr("action", "${ctx}/checkingin/ssCheckingIn/updata");
                         $("#searchForm").submit();
                     }
                 }, {buttonsFocus: 1});
