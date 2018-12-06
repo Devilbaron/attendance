@@ -69,7 +69,7 @@
         <th>迟到</th>
         <th>早退</th>
         <th>缺勤</th>
-        <th>早晚迟到</th>
+        <th>迟到早退</th>
         <th>备注</th>
         <shiro:hasPermission name="checkingamount:ssCheckingAmount:edit">
             <th>操作</th>

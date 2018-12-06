@@ -200,8 +200,8 @@ public class SsCheckingInLogsDetailController extends BaseController {
 
                 }
             }
-            String fileName = "统计数据" + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";
-            new ExportExcel("统计数据", SsCheckingInLogs.class).setDataList(page.getList()).write(response, fileName).dispose();
+            String fileName = "统计数据"+ ssCheckingInLogs.getBeginRecorddate() + "~" + ssCheckingInLogs.getEndRecorddate() + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";
+            new ExportExcel("统计数据"+ ssCheckingInLogs.getBeginRecorddate() + "~" + ssCheckingInLogs.getEndRecorddate(), SsCheckingInLogs.class).setDataList(page.getList()).write(response, fileName).dispose();
             return null;
         } catch (Exception e) {
             addMessage(redirectAttributes, "导出用户失败！失败信息：" + e.getMessage());

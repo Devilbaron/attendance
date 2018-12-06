@@ -27,7 +27,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/checkingin/ssCheckingIn/">考勤规则列表</a></li>
+		<%--<li><a href="${ctx}/checkingin/ssCheckingIn/">考勤规则列表</a></li>--%>
 		<li class="active"><a href="${ctx}/checkingin/ssCheckingIn/form?id=${ssCheckingIn.id}">考勤规则<shiro:hasPermission name="checkingin:ssCheckingIn:edit">${not empty ssCheckingIn.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="checkingin:ssCheckingIn:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="ssCheckingIn" action="${ctx}/checkingin/ssCheckingIn/save" method="post" class="form-horizontal">

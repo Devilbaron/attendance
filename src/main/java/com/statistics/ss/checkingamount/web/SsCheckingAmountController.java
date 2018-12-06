@@ -72,13 +72,16 @@ public class SsCheckingAmountController extends BaseController {
     @RequiresPermissions("checkingamount:ssCheckingAmount:view")
     @RequestMapping(value = {"list", ""})
     public String list(SsCheckingAmount ssCheckingAmount, HttpServletRequest request, HttpServletResponse response, Model model) {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if (ssCheckingAmount.getBeginCreateDate() == null){
+            ssCheckingAmount.setBeginCreateDate(sdf.format(d));
+            ssCheckingAmount.setEndCreateDate(sdf.format(d));
+        }
         Page<SsCheckingAmount> page = ssCheckingAmountService.findPage(new Page<SsCheckingAmount>(request, response), ssCheckingAmount);
 
         //获取一段时间的考勤规则
         List<SsCheckingIn> inList = new ArrayList<SsCheckingIn>();
-
-
-
 
         for (SsCheckingIn in : ssCheckingInService.findList(new SsCheckingIn())
                 ) {
@@ -91,7 +94,7 @@ public class SsCheckingAmountController extends BaseController {
                 }
 
                 if (ssCheckingAmount.getEndCreateDate() != null & ssCheckingAmount.getEndCreateDate() != null) {
-                    if (compare_date(end, checkin) <= 0) {
+                    if (compare_date(end, checkin) < 0) {
                         inList.remove(in);
                     }
                 }
@@ -140,17 +143,24 @@ public class SsCheckingAmountController extends BaseController {
                                     qq += 1;
                                     break;
                                 } else if (s.getIntime() == null) {
-                                    if (s.getOuttime() != null) {
-                                        //迟到
-                                        cd += 1;
-                                        break;
-                                    }
-                                } else if (s.getOuttime() == null) {
-                                    //迟到
-                                    if (s.getIntime() != null){
+                                    if (compare_time(si.getPm(), s.getOuttime()) > 0 ){
+                                        //迟到早退
                                         cz += 1;
                                         break;
+                                    }else{
+                                        cd +=1;
                                     }
+                                } else if (s.getOuttime() == null) {
+                                    if (compare_time(si.getAm(), s.getIntime()) < 0){
+                                        //迟到早退
+                                        cz += 1;
+                                        break;
+                                    }else {
+                                        //早退
+                                        zt +=1;
+                                        break;
+                                    }
+
                                 } else if (compare_time(si.getAm(), s.getIntime()) < 0) {
                                     if (compare_time(si.getPm(), s.getOuttime()) > 0) {
                                         //早退
@@ -189,6 +199,9 @@ public class SsCheckingAmountController extends BaseController {
                 page.getList().get(i).setAmount(String.valueOf(cz));
             }
         }
+
+
+
         model.addAttribute("ssCheckingAmount", ssCheckingAmount);
 
         model.addAttribute("page", page);
@@ -226,17 +239,11 @@ public class SsCheckingAmountController extends BaseController {
     public String exportFile(SsCheckingAmount ssCheckingAmount, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         try {
             Page<SsCheckingAmount> page = ssCheckingAmountService.findPage(new Page<SsCheckingAmount>(request, response), ssCheckingAmount);
+
             //获取一段时间的考勤规则
             List<SsCheckingIn> inList = new ArrayList<SsCheckingIn>();
 
-            //迟到天数
-            int cd = 0;
-            //早退天数
-            int zt = 0;
-            //迟到早退天数
-            int cz = 0;
-            //缺勤天数
-            int qq = 0;
+
 
 
             for (SsCheckingIn in : ssCheckingInService.findList(new SsCheckingIn())
@@ -250,7 +257,7 @@ public class SsCheckingAmountController extends BaseController {
                     }
 
                     if (ssCheckingAmount.getEndCreateDate() != null & ssCheckingAmount.getEndCreateDate() != null) {
-                        if (compare_date(end, checkin) <= 0) {
+                        if (compare_date(end, checkin) < 0) {
                             inList.remove(in);
                         }
                     }
@@ -259,6 +266,14 @@ public class SsCheckingAmountController extends BaseController {
             if (inList.size() > 0) {
                 //人员考勤统计
                 for (int i = 0; i < page.getList().size(); i++) {
+                    //迟到天数
+                    int cd = 0;
+                    //早退天数
+                    int zt = 0;
+                    //迟到早退天数
+                    int cz = 0;
+                    //缺勤天数
+                    int qq = 0;
                     //人员id
                     SsCheckingInLogs scils = new SsCheckingInLogs();
                     List<SsCheckingInLogs> scilsList = new ArrayList<SsCheckingInLogs>();
@@ -282,43 +297,61 @@ public class SsCheckingAmountController extends BaseController {
                         if (si.getHoliday() > 0 | si.getWeekend() > 0) {
                             //节假日不统计
                         } else {
+                            int tmp = 0;
                             //考勤记录
                             for (SsCheckingInLogs s : scilsList) {
                                 if (si.getId().equals(s.getRecorddate())) {
                                     if (s.getIntime() == null && s.getOuttime() == null) {
                                         //缺勤
                                         qq += 1;
+                                        break;
                                     } else if (s.getIntime() == null) {
-                                        if (s.getOuttime() != null) {
-                                            //迟到
-                                            cd += 1;
+                                        if (compare_time(si.getPm(), s.getOuttime()) > 0 ){
+                                            //迟到早退
+                                            cz += 1;
+                                            break;
+                                        }else{
+                                            cd +=1;
                                         }
                                     } else if (s.getOuttime() == null) {
-                                        //迟到
-                                        if (s.getIntime() != null){
+                                        if (compare_time(si.getAm(), s.getIntime()) < 0){
+                                            //迟到早退
                                             cz += 1;
+                                            break;
+                                        }else {
+                                            //早退
+                                            zt +=1;
+                                            break;
                                         }
-                                    } else if (compare_time(si.getAm(), s.getIntime()) < 1) {
-                                        if (compare_time(si.getPm(), s.getOuttime()) > 1) {
+
+                                    } else if (compare_time(si.getAm(), s.getIntime()) < 0) {
+                                        if (compare_time(si.getPm(), s.getOuttime()) > 0) {
                                             //早退
                                             cz += 1;
+                                            break;
                                         }else{
                                             //迟到
                                             cd += 1;
+                                            break;
                                         }
-                                    } else if (compare_time(si.getPm(), s.getOuttime()) > 1) {
-                                        if (compare_time(si.getAm(), s.getIntime()) < 1) {
+                                    } else if (compare_time(si.getPm(), s.getOuttime()) > 0) {
+                                        if (compare_time(si.getAm(), s.getIntime()) < 0) {
                                             cz += 1;
+                                            break;
                                         }else {
                                             //早退
                                             zt += 1;
+                                            break;
                                         }
                                     } else {
                                         //正常
                                     }
                                 }else {
-                                    qq += 1;
+                                    tmp += 1;
                                 }
+                            }
+                            if (tmp >= scilsList.size()){
+                                qq += 1;
                             }
                         }
                     }
@@ -329,8 +362,8 @@ public class SsCheckingAmountController extends BaseController {
                     page.getList().get(i).setAmount(String.valueOf(cz));
                 }
             }
-            String fileName = "用户数据" + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";
-            new ExportExcel("用户数据", SsCheckingAmount.class).setDataList(page.getList()).write(response, fileName).dispose();
+            String fileName = "统计数据" +ssCheckingAmount.getBeginCreateDate() + "~" + ssCheckingAmount.getEndCreateDate() + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";
+            new ExportExcel("统计数据"+ ssCheckingAmount.getBeginCreateDate() + "~" + ssCheckingAmount.getEndCreateDate(), SsCheckingAmount.class).setDataList(page.getList()).write(response, fileName).dispose();
             return null;
         } catch (Exception e) {
             addMessage(redirectAttributes, "导出用户失败！失败信息：" + e.getMessage());

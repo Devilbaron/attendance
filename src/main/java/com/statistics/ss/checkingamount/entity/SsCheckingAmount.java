@@ -121,7 +121,7 @@ public class SsCheckingAmount extends DataEntity<SsCheckingAmount> {
 	}
 	
 	@Length(min=0, max=16, message="缺勤结论长度必须介于 0 和 16 之间")
-	@ExcelField(title = "早晚迟到", type = 1, align = 2, sort = 6)
+	@ExcelField(title = "迟到早退", type = 1, align = 2, sort = 6)
 	public String getAmount() {
 		return amount;
 	}
