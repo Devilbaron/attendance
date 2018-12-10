@@ -40,14 +40,23 @@
 			<if test="beginRecorddate != null and endRecorddate != null and beginRecorddate != '' and endRecorddate != ''">
 				AND a.recorddate BETWEEN #{beginRecorddate} AND #{endRecorddate}
 			</if>
+            <if test="recorddate != null and recorddate != ''">
+                AND a.recorddate LIKE
+                <if test="dbName == 'oracle'">'%'||#{recorddate}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{recorddate}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{recorddate},'%')</if>
+            </if>
 			<if test="departmentname != null and departmentname != ''">
 				AND a.departmentname LIKE 
 					<if test="dbName == 'oracle'">'%'||#{departmentname}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{departmentname}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{departmentname},'%')</if>
 			</if>
+			<if test="personcode != null and personcode != ''">
+				AND a.personcode = #{personcode}
+			</if>
 			<if test="personname != null and personname != ''">
-				AND a.personname LIKE 
+				AND a.personname LIKE
 					<if test="dbName == 'oracle'">'%'||#{personname}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{personname}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{personname},'%')</if>
@@ -129,8 +138,7 @@
 	</update>
 	
 	<update id="delete">
-		UPDATE ss_checking_in_logs SET 
-			del_flag = #{DEL_FLAG_DELETE}
+		DELETE FROM ss_checking_in_logs
 		WHERE recordid = #{recordid}
 	</update>
 	

@@ -47,13 +47,14 @@
 				<input name="endRecorddate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					   value="<fmt:formatDate value="${endRecorddate}" pattern="yyyy-MM-dd"/>"
 					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+				<input name="personcode" type="hidden" value="${ssCheckingInLogs.personcode}">
 			</li>
-			<li><label>部门名称：</label>
-				<form:input path="departmentname" htmlEscape="false" maxlength="35" class="input-medium"/>
-			</li>
-			<li><label>人员名称：</label>
-				<form:input path="personname" htmlEscape="false" maxlength="32" class="input-medium"/>
-			</li>
+			<%--<li><label>部门名称：</label>--%>
+				<%--<form:input path="departmentname" htmlEscape="false" maxlength="35" class="input-medium"/>--%>
+			<%--</li>--%>
+			<%--<li><label>人员名称：</label>--%>
+				<%--<form:input path="personname" htmlEscape="false" maxlength="32" class="input-medium"/>--%>
+			<%--</li>--%>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li><input id="btnExport" class="btn btn-primary" type="button" value="导出"/></li>
 			<li class="clearfix"></li>

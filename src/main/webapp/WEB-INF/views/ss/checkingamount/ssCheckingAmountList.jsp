@@ -102,7 +102,7 @@
             </td>
             <shiro:hasPermission name="checkingamount:ssCheckingAmount:edit">
                 <td>
-                    <a href="${ctx}/checkinginlogsdetail/ssCheckingInLogs/list?personname=${ssCheckingAmount.personname}&beginRecorddate=${begin}&endRecorddate=${end}">明细</a>
+                    <a href="${ctx}/checkinginlogsdetail/ssCheckingInLogs/list?personcode=${ssCheckingAmount.personcode}&beginRecorddate=${begin}&endRecorddate=${end}">明细</a>
                     <%--<a href="${ctx}/checkingamount/ssCheckingAmount/delete?id=${ssCheckingAmount.id}"--%>
                        <%--onclick="return confirmx('确认要删除该统计吗？', this.href)">删除</a>--%>
                 </td>

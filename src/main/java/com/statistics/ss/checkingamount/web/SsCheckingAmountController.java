@@ -78,6 +78,10 @@ public class SsCheckingAmountController extends BaseController {
             ssCheckingAmount.setBeginCreateDate(sdf.format(d));
             ssCheckingAmount.setEndCreateDate(sdf.format(d));
         }
+        if (ssCheckingAmount.getPersonname() != null){
+
+//            ssCheckingAmount.setPersoncode();
+        }
         Page<SsCheckingAmount> page = ssCheckingAmountService.findPage(new Page<SsCheckingAmount>(request, response), ssCheckingAmount);
 
         //获取一段时间的考勤规则
@@ -115,6 +119,7 @@ public class SsCheckingAmountController extends BaseController {
                 SsCheckingInLogs scils = new SsCheckingInLogs();
                 List<SsCheckingInLogs> scilsList = new ArrayList<SsCheckingInLogs>();
                 scils.setPersonname(page.getList().get(i).getPersonname());
+                scils.setPersoncode(page.getList().get(i).getPersoncode());
                 List<SsCheckingAmount> scaList = new ArrayList<SsCheckingAmount>();
 
                 //获取员工单人记录
@@ -243,11 +248,8 @@ public class SsCheckingAmountController extends BaseController {
             //获取一段时间的考勤规则
             List<SsCheckingIn> inList = new ArrayList<SsCheckingIn>();
 
-
-
-
             for (SsCheckingIn in : ssCheckingInService.findList(new SsCheckingIn())
-                    ) {
+            ) {
                 if (ssCheckingAmount.getBeginCreateDate() != null & ssCheckingAmount.getBeginCreateDate() != null) {
                     String begin = ssCheckingAmount.getBeginCreateDate();
                     String checkin = in.getId();
@@ -278,6 +280,7 @@ public class SsCheckingAmountController extends BaseController {
                     SsCheckingInLogs scils = new SsCheckingInLogs();
                     List<SsCheckingInLogs> scilsList = new ArrayList<SsCheckingInLogs>();
                     scils.setPersonname(page.getList().get(i).getPersonname());
+                    scils.setPersoncode(page.getList().get(i).getPersoncode());
                     List<SsCheckingAmount> scaList = new ArrayList<SsCheckingAmount>();
 
                     //获取员工单人记录
@@ -377,10 +380,8 @@ public class SsCheckingAmountController extends BaseController {
             Date dt1 = df.parse(DATE1);
             Date dt2 = df.parse(DATE2);
             if (dt1.getTime() > dt2.getTime()) {
-                System.out.println("dt1 在dt2前");
                 return 1;
             } else if (dt1.getTime() < dt2.getTime()) {
-                System.out.println("dt1在dt2后");
                 return -1;
             } else {
                 return 0;
@@ -392,7 +393,7 @@ public class SsCheckingAmountController extends BaseController {
     }
 
     public int compare_time(String DATE1, String DATE2) {
-        DateFormat df = new SimpleDateFormat("hh:mm:ss");
+        DateFormat df = new SimpleDateFormat("HH:mm:ss");
         try {
             Date dt1 = df.parse(DATE1);
             Date dt2 = df.parse(DATE2);

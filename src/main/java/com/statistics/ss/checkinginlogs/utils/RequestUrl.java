@@ -24,10 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -191,8 +188,10 @@ public class RequestUrl {
 
     }
 
-    public RequestData JsonResult(String url) {
+    public RequestData JsonResult(String url) throws IOException{
         String urlDemon = RequestUrl(url);
+
+        String jsonUrl = readJsonData("C:\\Users\\Administrator\\Desktop\\json.json");
         return JsonRequestUrl.getJsonString(urlDemon);
     }
 
@@ -294,5 +293,38 @@ public class RequestUrl {
         }
         return cookie;
 
+    }
+
+
+    /**
+     * 读取json文件并且转换成字符串
+     * @param filePath文件的路径
+     * @return
+     * @throws IOException
+     */
+    public static String readJsonData(String pactFile) throws IOException {
+        // 读取文件数据
+        //System.out.println("读取文件数据util");
+
+        StringBuffer strbuffer = new StringBuffer();
+        File myFile = new File(pactFile);//"D:"+File.separatorChar+"DStores.json"
+        if (!myFile.exists()) {
+            System.err.println("Can't Find " + pactFile);
+        }
+        try {
+            FileInputStream fis = new FileInputStream(pactFile);
+            InputStreamReader inputStreamReader = new InputStreamReader(fis, "gbk");
+            BufferedReader in  = new BufferedReader(inputStreamReader);
+
+            String str;
+            while ((str = in.readLine()) != null) {
+                strbuffer.append(str);  //new String(str,"UTF-8")
+            }
+            in.close();
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+        //System.out.println("读取文件结束util");
+        return strbuffer.toString();
     }
 }

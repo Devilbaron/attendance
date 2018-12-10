@@ -24,7 +24,16 @@
 			<include refid="ssCheckingAmountColumns"/>
 		FROM ss_checking_amount a
 		<include refid="ssCheckingAmountJoins"/>
-		WHERE a.id = #{id}
+		WHERE
+		a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="id != null and id != ''">
+			and a.id = #{id}
+		</if>
+
+		<if test="personcode != null and personcode != ''">
+			and a.personcode = #{personcode}
+		</if>
+
 	</select>
 	
 	<select id="findList" resultType="SsCheckingAmount">
@@ -36,6 +45,9 @@
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="personname != null and personname != ''">
 				AND a.personname = #{personname}
+			</if>
+			<if test="personcode != null and personcode != ''">
+				AND a.personcode = #{personcode}
 			</if>
 		</where>
 		<choose>

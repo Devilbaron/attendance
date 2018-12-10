@@ -77,22 +77,24 @@ public class JsonRequestUrl {
             AttendancesData pp = new AttendancesData();
             pp.setRecordId(item.getInteger("RecordId"));
             pp.setRecordDate(item.getString("RecordDate"));
-            pp.setPersonName(item.getString("PersonName"));
             pp.setRecordTime(item.getString("RecordTime"));
+
             pp.setPersonCode(item.getInteger("PersonCode"));
+            pp.setPersonName(item.getString("PersonName"));
+
             pp.setDepartmentName(item.getString("DepartmentName"));
             pp.setDepartmentCode(item.getInteger("DepartmentCode"));
-            pp.setInTime(item.getString("InTime"));
-            pp.setOutTime(item.getString("OutTime"));
-            pp.setDuration(item.getString("Duration"));
+//            pp.setInTime(item.getString("InTime"));
+//            pp.setOutTime(item.getString("OutTime"));
+//            pp.setDuration(item.getString("Duration"));
             pp.setPassTime(item.getString("PassTime"));
             pp.setInorout(item.getString("Inorout"));
-            pp.setDeviceCode(item.getInteger("DeviceCode"));
-            pp.setDeviceName(item.getString("DeviceName"));
+//            pp.setDeviceCode(item.getInteger("DeviceCode"));
+//            pp.setDeviceName(item.getString("DeviceName"));
 //            List<PicturePath> p = getJsonArrayPp(jsonString, i);
 //            pp.setPicturePath(p);
-            pp.setSeqid(item.getInteger("Seqid"));
-            pp.setPersonPicturePaths(item.getString("PersonPicturePaths"));
+//            pp.setSeqid(item.getInteger("Seqid"));
+//            pp.setPersonPicturePaths(item.getString("PersonPicturePaths"));
             list.add(pp);
         }
         return list;
